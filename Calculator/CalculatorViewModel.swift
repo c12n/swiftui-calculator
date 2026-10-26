@@ -106,7 +106,7 @@ final class CalculatorViewModel {
         guard !hasError else { return }
         if activeOperation == nil {
             if let pending = pendingOperation, let stored = storedValue {
-                guard showResult(pending.apply(stored, currentValue)) else { return }
+                guard evaluate(pending, stored, currentValue) else { return }
             }
             storedValue = currentValue
         }
@@ -120,9 +120,9 @@ final class CalculatorViewModel {
         if let pending = pendingOperation, let stored = storedValue {
             lastOperation = pending
             lastOperand = currentValue
-            showResult(pending.apply(stored, currentValue))
+            evaluate(pending, stored, currentValue)
         } else if let last = lastOperation, let operand = lastOperand {
-            showResult(last.apply(currentValue, operand))
+            evaluate(last, currentValue, operand)
         }
         storedValue = nil
         pendingOperation = nil
@@ -154,6 +154,17 @@ final class CalculatorViewModel {
 
     // MARK: - Helpers
 
+    /// Evaluates an operation, with an Easter egg: dividing by zero
+    /// does not say "Error" — it says "bruh".
+    @discardableResult
+    private func evaluate(_ operation: CalculatorOperation, _ lhs: Double, _ rhs: Double) -> Bool {
+        if operation == .divide, rhs == 0 {
+            showBruh()
+            return false
+        }
+        return showResult(operation.apply(lhs, rhs))
+    }
+
     @discardableResult
     private func showResult(_ value: Double?) -> Bool {
         guard let value, value.isFinite else {
@@ -168,6 +179,14 @@ final class CalculatorViewModel {
     private func showError() {
         reset()
         displayText = "Error"
+        hasError = true
+    }
+
+    /// Easter egg for division by zero. Behaves like an error state —
+    /// the next digit or AC recovers — but the display says "bruh".
+    private func showBruh() {
+        reset()
+        displayText = "bruh"
         hasError = true
     }
 

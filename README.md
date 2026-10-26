@@ -24,7 +24,8 @@ Generated with the help of Claude (via claude.ai), then packaged as a standard X
 - Percent `%` with iOS-style behaviour — e.g. `50 + 10% = 55`
 - Sign toggle `+/-`
 - `C` clears the current entry, `AC` resets everything
-- Divide-by-zero and overflow show `Error` — the next digit or `AC` recovers
+- Overflow shows `Error` — the next digit or `AC` recovers
+- **Easter egg:** dividing by zero doesn't say Error — it says **`bruh`**. The next digit or `AC` recovers from it, just like an error
 - Active operator is highlighted, just like the Apple Calculator
 - Large results switch to scientific notation automatically
 
