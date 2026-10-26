@@ -152,4 +152,4 @@ The original calculator logic and layout were generated with **Claude** via [cla
 
 MIT — see [LICENSE](LICENSE) for the full text.
 
-Copyright (c) 2026 Youssef
+Copyright (c) 2026 c12n Apps
