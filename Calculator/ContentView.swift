@@ -62,8 +62,10 @@ struct ContentView: View {
     private func keypad(size: CGFloat) -> some View {
         if #available(iOS 26.0, *) {
             // Groups the keys so their Liquid Glass renders as one
-            // material system, merging only when keys get very close.
-            GlassEffectContainer(spacing: spacing) {
+            // material system. Spacing stays well below the 14pt key gap
+            // so neighbouring keys do not bridge/merge into each other
+            // when an interactive key swells on press (Claude review fix).
+            GlassEffectContainer(spacing: 4) {
                 keypadRows(size: size)
             }
         } else {

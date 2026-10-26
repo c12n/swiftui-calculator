@@ -91,11 +91,19 @@ struct CalculatorButton: View {
     }
 
     private struct PressHighlightStyle: ButtonStyle {
+        @ViewBuilder
         func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .brightness(configuration.isPressed ? 0.12 : 0)
-                .scaleEffect(configuration.isPressed ? 0.96 : 1)
-                .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
+            if #available(iOS 26.0, *) {
+                // Interactive Liquid Glass already provides press feedback;
+                // adding brightness/scale here would double the effect
+                // (Claude review fix).
+                configuration.label
+            } else {
+                configuration.label
+                    .brightness(configuration.isPressed ? 0.12 : 0)
+                    .scaleEffect(configuration.isPressed ? 0.96 : 1)
+                    .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
+            }
         }
     }
 }
