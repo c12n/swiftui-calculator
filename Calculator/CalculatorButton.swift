@@ -14,6 +14,11 @@ struct CalculatorButton: View {
     }
 
     @Environment(\.colorScheme) private var colorScheme
+    /// User-chosen accent colour (Settings → colour picker), drives the
+    /// operation keys. Defaults to classic calculator orange.
+    @AppStorage("accentHex") private var accentHex = AccentTheme.defaultHex
+
+    private var accent: Color { Color(hex: accentHex) }
 
     let title: Title
     var kind: Kind = .digit
@@ -56,7 +61,7 @@ struct CalculatorButton: View {
         case .digit, .function:
             return .primary
         case .operation:
-            return isHighlighted ? .calculatorOrange : .white
+            return isHighlighted ? accent : .white
         }
     }
 
@@ -73,8 +78,8 @@ struct CalculatorButton: View {
                 : Color.black.opacity(0.14)
         case .operation:
             return isHighlighted
-                ? (colorScheme == .dark ? Color.white : Color.white)
-                : Color.calculatorOrange.opacity(0.85)
+                ? Color.white
+                : accent.opacity(0.85)
         }
     }
 
@@ -86,7 +91,7 @@ struct CalculatorButton: View {
         case .function:
             return colorScheme == .dark ? Color(white: 0.38) : Color(white: 0.82)
         case .operation:
-            return isHighlighted ? Color(.systemBackground) : .calculatorOrange
+            return isHighlighted ? Color(.systemBackground) : accent
         }
     }
 

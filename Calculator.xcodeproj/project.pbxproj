@@ -12,6 +12,14 @@
 		E00000000000000000000003 /* CalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000003 /* CalculatorViewModel.swift */; };
 		E00000000000000000000004 /* CalculatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000004 /* CalculatorButton.swift */; };
 		E00000000000000000000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000005 /* Assets.xcassets */; };
+		AB0000000000000000000001 /* CalculatorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000001 /* CalculatorPanelView.swift */; };
+		AB0000000000000000000002 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000002 /* History.swift */; };
+		AB0000000000000000000003 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000003 /* Haptics.swift */; };
+		AB0000000000000000000004 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000004 /* Theme.swift */; };
+		AB0000000000000000000005 /* Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000005 /* Converter.swift */; };
+		AB0000000000000000000006 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000006 /* HistoryView.swift */; };
+		AB0000000000000000000007 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000007 /* SettingsView.swift */; };
+		AB0000000000000000000008 /* DuoCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000008 /* DuoCalculatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +29,14 @@
 		D00000000000000000000004 /* CalculatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorButton.swift; sourceTree = "<group>"; };
 		D00000000000000000000005 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		555555555555555555555555 /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F00000000000000000000001 /* CalculatorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorPanelView.swift; sourceTree = "<group>"; };
+		F00000000000000000000002 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
+		F00000000000000000000003 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		F00000000000000000000004 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		F00000000000000000000005 /* Converter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Converter.swift; sourceTree = "<group>"; };
+		F00000000000000000000006 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		F00000000000000000000007 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F00000000000000000000008 /* DuoCalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuoCalculatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +66,14 @@
 				D00000000000000000000003 /* CalculatorViewModel.swift */,
 				D00000000000000000000004 /* CalculatorButton.swift */,
 				D00000000000000000000005 /* Assets.xcassets */,
+				F00000000000000000000001 /* CalculatorPanelView.swift */,
+				F00000000000000000000002 /* History.swift */,
+				F00000000000000000000003 /* Haptics.swift */,
+				F00000000000000000000004 /* Theme.swift */,
+				F00000000000000000000005 /* Converter.swift */,
+				F00000000000000000000006 /* HistoryView.swift */,
+				F00000000000000000000007 /* SettingsView.swift */,
+				F00000000000000000000008 /* DuoCalculatorView.swift */,
 			);
 			path = Calculator;
 			sourceTree = "<group>";
@@ -135,6 +159,14 @@
 				E00000000000000000000002 /* ContentView.swift in Sources */,
 				E00000000000000000000003 /* CalculatorViewModel.swift in Sources */,
 				E00000000000000000000004 /* CalculatorButton.swift in Sources */,
+				AB0000000000000000000001 /* CalculatorPanelView.swift in Sources */,
+				AB0000000000000000000002 /* History.swift in Sources */,
+				AB0000000000000000000003 /* Haptics.swift in Sources */,
+				AB0000000000000000000004 /* Theme.swift in Sources */,
+				AB0000000000000000000005 /* Converter.swift in Sources */,
+				AB0000000000000000000006 /* HistoryView.swift in Sources */,
+				AB0000000000000000000007 /* SettingsView.swift in Sources */,
+				AB0000000000000000000008 /* DuoCalculatorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,9 +195,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -177,7 +210,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.c12n.calculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -193,9 +226,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -207,7 +241,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.c12n.calculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

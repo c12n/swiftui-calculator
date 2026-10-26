@@ -9,6 +9,17 @@ Generated with the help of Claude (via claude.ai), then packaged as a standard X
 ![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+## What's new in 1.1.0
+
+- **Math history** — every `=` result is saved (persisted, latest first, up to 100). Tap a history entry to reuse its result, swipe to delete, or Clear All
+- **Haptics** — light taps for digits, medium for operations, heavy for `=`, and an error buzz for `bruh` / errors (toggleable in Settings)
+- **Unit & currency converter** — Length, Weight, Temperature, Volume, Speed, Data, and Currency. Currency uses an offline October 2026 rate snapshot (units per 1 USD) and is clearly labelled approximate — not live rates
+- **Colour picker** — change the accent colour of the operation keys: 8 presets or any custom colour via the native colour picker
+- **Icon changing** — switch the Home Screen icon in Settings: Classic Orange, Blue, Green, Purple, or Mono (alternate app icons shipped in the asset catalog)
+- **Appearance override** — follow the system, or force Light / Dark in Settings
+- **iPad & landscape UI** — on iPad and in landscape the app uses a Duo layout: calculator on the left, History / Converter / Settings panel on the right
+- **iPhone Duo** — rotate an iPhone to landscape for the same two-pane Duo layout, and open **Duo mode** from the toolbar for two independent calculators side by side (stacked in portrait), sharing one history
+
 ## Features
 
 - iOS-style calculator UI that adapts to any screen size
@@ -46,11 +57,19 @@ Open the project in Xcode and run it in an iPhone or iPad simulator to see the a
 swiftui-calculator/
 ├── Calculator.xcodeproj/                 # Xcode project + shared Calculator scheme
 ├── Calculator/
-│   ├── CalculatorApp.swift               # @main app entry point, follows system appearance
-│   ├── ContentView.swift                 # Display + button grid layout
-│   ├── CalculatorViewModel.swift         # All calculator logic (@Observable)
+│   ├── CalculatorApp.swift               # @main app entry point, shared history store, appearance
+│   ├── ContentView.swift                 # Adaptive root: single panel, Duo layout, sheets, Duo mode
+│   ├── CalculatorPanelView.swift         # One calculator: display + button grid layout
+│   ├── CalculatorViewModel.swift         # All calculator logic (@Observable), records history
 │   ├── CalculatorButton.swift            # Reusable Liquid Glass round / capsule key view
-│   └── Assets.xcassets/                  # App icon (incl. Dark + Tinted variants) + accent colour
+│   ├── History.swift                     # Persisted calculation history store
+│   ├── HistoryView.swift                 # History list (tap to reuse, swipe to delete)
+│   ├── Haptics.swift                     # UIKit haptic feedback wrapper
+│   ├── Converter.swift                   # Unit & currency converter (offline currency rates)
+│   ├── Theme.swift                       # Accent colour (hex) + appearance choice
+│   ├── SettingsView.swift                # Appearance, colour picker, icon changing, haptics, Duo
+│   ├── DuoCalculatorView.swift           # Duo mode: two independent calculators
+│   └── Assets.xcassets/                  # Primary icon (Dark + Tinted variants), 4 alternate icons, accent colour
 ├── .github/workflows/
 │   └── build-ipa.yml                     # GitHub Actions: builds an unsigned IPA on macOS
 ├── LICENSE                               # MIT License
@@ -59,10 +78,13 @@ swiftui-calculator/
 
 ### How the code is organised
 
-- **CalculatorApp.swift** — the `@main` entry point. Shows `ContentView` in a `WindowGroup` with no forced colour scheme, so Light / Dark Mode is entirely system-driven.
-- **ContentView.swift** — lays out the display and a 5-row key grid with `GeometryReader`, so button size fits both width and height on iPhone and iPad. The `0` key spans two columns.
-- **CalculatorViewModel.swift** — the logic, with no UI code. It defines `CalculatorOperation` and `CalculatorKey`, and an `@Observable` view model that tracks the current value, stored value, pending / last operation, entry state, and error state, and formats results.
-- **CalculatorButton.swift** — a reusable key view. It renders text or an SF Symbol, colours itself by kind (digit / function / operation) using the current colour scheme, inverts when its operation is active, and on iOS 26 renders with native Liquid Glass (`.glassEffect(.regular.tint(...).interactive(), in: Capsule())`); earlier iOS versions get an adaptive solid capsule. `ContentView` groups the keys in a `GlassEffectContainer` on iOS 26 and puts the display behind a glass / material panel, over a Light/Dark-adaptive gradient backdrop.
+- **CalculatorApp.swift** — the `@main` entry point. Creates the shared `HistoryStore`, injects it into the environment, and applies the user's Appearance choice (System by default).
+- **ContentView.swift** — the adaptive root. Compact/portrait: one calculator panel with a toolbar (History, Converter, Duo, Settings as sheets). Wide, iPad, or iPhone landscape: the Duo layout — calculator left (capped width), companion panel with History / Converter / Settings tabs right.
+- **CalculatorPanelView.swift** — one complete calculator: display and a 5-row key grid sized with `GeometryReader`, so button size fits both width and height. The `0` key spans two columns. Duo mode hosts two panels, each with its own view model. Key presses fire haptics via `Haptics.swift`.
+- **CalculatorViewModel.swift** — the logic, with no UI code. It defines `CalculatorOperation` and `CalculatorKey`, and an `@Observable` view model that tracks the current value, stored value, pending / last operation, entry state, and error state, formats results, and records every `=` into the shared history.
+- **CalculatorButton.swift** — a reusable key view. It renders text or an SF Symbol, colours itself by kind (digit / function / operation) using the current colour scheme and the user-chosen accent colour, inverts when its operation is active, and on iOS 26 renders with native Liquid Glass (`.glassEffect(.regular.tint(...).interactive(), in: Capsule())`); earlier iOS versions get an adaptive solid capsule. The keys are grouped in a `GlassEffectContainer` on iOS 26 and the display sits behind a glass / material panel, over a Light/Dark-adaptive gradient backdrop.
+- **Converter.swift** — unit conversion via base-unit factors (temperature via Celsius formulas; currency via a static USD table with an in-app "offline, approximate" disclaimer).
+- **SettingsView.swift / Theme.swift** — appearance override, accent colour presets + native `ColorPicker` (persisted as hex), alternate icon switching with `UIApplication.setAlternateIconName` (all app icon sets are bundled via `ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS`), and the haptics toggle.
 
 ## Getting Started
 

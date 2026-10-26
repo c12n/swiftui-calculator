@@ -4,6 +4,15 @@ import Observation
 enum CalculatorOperation: Hashable {
     case add, subtract, multiply, divide
 
+    var symbol: String {
+        switch self {
+        case .add: return "+"
+        case .subtract: return "−"
+        case .multiply: return "×"
+        case .divide: return "÷"
+        }
+    }
+
     /// Returns nil on division by zero.
     func apply(_ lhs: Double, _ rhs: Double) -> Double? {
         switch self {
@@ -27,6 +36,14 @@ enum CalculatorKey: Hashable {
 
 @Observable
 final class CalculatorViewModel {
+    /// Shared history store, if the app provided one. Every successful
+    /// "=" evaluation is recorded there.
+    var history: HistoryStore?
+
+    init(history: HistoryStore? = nil) {
+        self.history = history
+    }
+
     private(set) var displayText = "0"
 
     /// Operator waiting for its second operand (highlighted in the UI).
@@ -120,14 +137,29 @@ final class CalculatorViewModel {
         if let pending = pendingOperation, let stored = storedValue {
             lastOperation = pending
             lastOperand = currentValue
-            evaluate(pending, stored, currentValue)
+            let expression = "\(Self.format(stored)) \(pending.symbol) \(Self.format(currentValue))"
+            if evaluate(pending, stored, currentValue) {
+                history?.add(expression: expression, result: displayText)
+            }
         } else if let last = lastOperation, let operand = lastOperand {
-            evaluate(last, currentValue, operand)
+            let expression = "\(Self.format(currentValue)) \(last.symbol) \(Self.format(operand))"
+            if evaluate(last, currentValue, operand) {
+                history?.add(expression: expression, result: displayText)
+            }
         }
         storedValue = nil
         pendingOperation = nil
         activeOperation = nil
         isEnteringNumber = false
+    }
+
+    /// Load an arbitrary value (e.g. a result tapped in History) as the
+    /// current, ready-to-calculate-from value.
+    func loadValue(_ text: String) {
+        guard let value = Double(text), value.isFinite else { return }
+        reset()
+        currentValue = value
+        displayText = Self.format(value)
     }
 
     private func applyPercent() {
