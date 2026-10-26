@@ -9,6 +9,14 @@ struct ContentView: View {
     @Environment(HistoryStore.self) private var history
     @Environment(\.colorScheme) private var colorScheme
 
+    /// Held here in the root — not inside the panel — so switching between
+    /// the single and Duo layouts on rotation keeps the calculation.
+    @State private var mainViewModel: CalculatorViewModel
+
+    init(history: HistoryStore) {
+        _mainViewModel = State(initialValue: CalculatorViewModel(history: history))
+    }
+
     @State private var activeSheet: RootSheet?
     @State private var showDuo = false
     @State private var companionTab: CompanionTab = .history
@@ -32,7 +40,7 @@ struct ContentView: View {
                 HStack(spacing: 0) {
                     VStack(spacing: 0) {
                         toolbarRow
-                        CalculatorPanelView(history: history)
+                        CalculatorPanelView(viewModel: mainViewModel)
                     }
                     .frame(maxWidth: 560)
                     Divider()
@@ -42,7 +50,7 @@ struct ContentView: View {
             } else {
                 VStack(spacing: 0) {
                     toolbarRow
-                    CalculatorPanelView(history: history)
+                    CalculatorPanelView(viewModel: mainViewModel)
                 }
             }
         }
@@ -67,7 +75,7 @@ struct ContentView: View {
             }
         }
         .fullScreenCover(isPresented: $showDuo) {
-            DuoCalculatorView()
+            DuoCalculatorView(history: history)
         }
     }
 

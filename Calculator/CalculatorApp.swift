@@ -7,7 +7,7 @@ struct CalculatorApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(history: history)
                 .environment(history)
                 // Native Light/Dark Mode: follows the system setting by
                 // default; the user can force Light or Dark in Settings.

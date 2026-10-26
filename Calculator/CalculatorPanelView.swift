@@ -4,7 +4,9 @@ import SwiftUI
 /// Used singly by the main layout and twice by Duo mode.
 struct CalculatorPanelView: View {
     @Environment(HistoryStore.self) private var historyStore
-    @State private var viewModel: CalculatorViewModel
+    /// Owned by the root view (not @State here) so rotating between the
+    /// single and Duo layouts never wipes the calculation (Claude fix).
+    let viewModel: CalculatorViewModel
 
     private let spacing: CGFloat = 14
 
@@ -15,10 +17,6 @@ struct CalculatorPanelView: View {
         [.digit(1), .digit(2), .digit(3), .operation(.add)],
         [.digit(0), .decimal, .equals]
     ]
-
-    init(history: HistoryStore) {
-        _viewModel = State(initialValue: CalculatorViewModel(history: history))
-    }
 
     var body: some View {
         GeometryReader { proxy in
@@ -34,9 +32,10 @@ struct CalculatorPanelView: View {
             .frame(maxWidth: .infinity)
             .padding(.bottom, spacing)
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .onChange(of: historyStore.loadRequestID) { _, _ in
-            if let text = historyStore.loadText {
-                viewModel.loadValue(text)
+            if let value = historyStore.loadValue {
+                viewModel.loadValue(value)
             }
         }
     }
@@ -94,12 +93,15 @@ struct CalculatorPanelView: View {
             size: size,
             width: key == .digit(0) ? size * 2 + spacing : nil
         ) {
+            let hadError = viewModel.hasError
             viewModel.press(key)
-            Haptics.tap(for: key)
-            if viewModel.displayText == "bruh" || viewModel.displayText == "Error" {
+            if !hadError && viewModel.hasError {
                 Haptics.error()
-            } else if key == .equals {
-                Haptics.success()
+            } else {
+                Haptics.tap(for: key)
+                if key == .equals {
+                    Haptics.success()
+                }
             }
         }
     }

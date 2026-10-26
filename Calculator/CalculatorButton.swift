@@ -61,7 +61,14 @@ struct CalculatorButton: View {
         case .digit, .function:
             return .primary
         case .operation:
-            return isHighlighted ? accent : .white
+            // Highlighted key sits on a white background (stock iOS look);
+            // a light accent like yellow would be unreadable on it.
+            if isHighlighted {
+                return (colorScheme == .light && AccentTheme.isLight(hex: accentHex))
+                    ? .black
+                    : accent
+            }
+            return .white
         }
     }
 

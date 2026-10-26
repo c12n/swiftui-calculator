@@ -55,7 +55,11 @@ final class CalculatorViewModel {
     private var lastOperation: CalculatorOperation?
     private var lastOperand: Double?
     private var isEnteringNumber = false
-    private var hasError = false
+    private(set) var hasError = false
+
+    /// Tokens of the expression being built, e.g. ["2", "+", "3", "×"],
+    /// so History can show the full chained expression (Claude review fix).
+    private var expressionParts: [String] = []
 
     private static let maxDigits = 9
 
@@ -121,12 +125,24 @@ final class CalculatorViewModel {
 
     private func setOperation(_ operation: CalculatorOperation) {
         guard !hasError else { return }
-        if activeOperation == nil {
-            if let pending = pendingOperation, let stored = storedValue {
-                guard evaluate(pending, stored, currentValue) else { return }
+        if activeOperation != nil {
+            // Operator tapped twice in a row: swap the pending operator,
+            // in the expression tokens as well as the state.
+            if let last = expressionParts.last,
+               ["+", "−", "×", "÷"].contains(last) {
+                expressionParts[expressionParts.count - 1] = operation.symbol
             }
-            storedValue = currentValue
+            pendingOperation = operation
+            activeOperation = operation
+            isEnteringNumber = false
+            return
         }
+        expressionParts.append(Self.format(currentValue))
+        expressionParts.append(operation.symbol)
+        if let pending = pendingOperation, let stored = storedValue {
+            guard evaluate(pending, stored, currentValue) else { return }
+        }
+        storedValue = currentValue
         pendingOperation = operation
         activeOperation = operation
         isEnteringNumber = false
@@ -137,26 +153,29 @@ final class CalculatorViewModel {
         if let pending = pendingOperation, let stored = storedValue {
             lastOperation = pending
             lastOperand = currentValue
-            let expression = "\(Self.format(stored)) \(pending.symbol) \(Self.format(currentValue))"
+            let expression = expressionParts.isEmpty
+                ? "\(Self.format(stored)) \(pending.symbol) \(Self.format(currentValue))"
+                : (expressionParts + [Self.format(currentValue)]).joined(separator: " ")
             if evaluate(pending, stored, currentValue) {
-                history?.add(expression: expression, result: displayText)
+                history?.add(expression: expression, result: displayText, value: currentValue)
             }
         } else if let last = lastOperation, let operand = lastOperand {
             let expression = "\(Self.format(currentValue)) \(last.symbol) \(Self.format(operand))"
             if evaluate(last, currentValue, operand) {
-                history?.add(expression: expression, result: displayText)
+                history?.add(expression: expression, result: displayText, value: currentValue)
             }
         }
         storedValue = nil
         pendingOperation = nil
         activeOperation = nil
         isEnteringNumber = false
+        expressionParts = []
     }
 
-    /// Load an arbitrary value (e.g. a result tapped in History) as the
-    /// current, ready-to-calculate-from value.
-    func loadValue(_ text: String) {
-        guard let value = Double(text), value.isFinite else { return }
+    /// Load a value (e.g. a result tapped in History) as the current,
+    /// ready-to-calculate-from value.
+    func loadValue(_ value: Double) {
+        guard value.isFinite else { return }
         reset()
         currentValue = value
         displayText = Self.format(value)
@@ -232,6 +251,7 @@ final class CalculatorViewModel {
         lastOperand = nil
         isEnteringNumber = false
         hasError = false
+        expressionParts = []
     }
 
     private static func format(_ value: Double) -> String {

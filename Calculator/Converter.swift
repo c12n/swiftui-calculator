@@ -126,7 +126,9 @@ struct ConverterView: View {
     @State private var input = "1"
 
     private var result: Double? {
-        guard let value = Double(input) else { return nil }
+        // Accept comma decimals ("3,5") as well as "3.5" (Claude review fix).
+        let normalized = input.replacingOccurrences(of: ",", with: ".")
+        guard let value = Double(normalized) else { return nil }
         return ConversionUnit.convert(value, from: fromUnit, to: toUnit, category: category)
     }
 

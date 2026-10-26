@@ -7,6 +7,8 @@ struct HistoryView: View {
 
     var onUse: (() -> Void)? = nil
 
+    @State private var confirmClear = false
+
     var body: some View {
         Group {
             if history.entries.isEmpty {
@@ -19,7 +21,7 @@ struct HistoryView: View {
                 List {
                     ForEach(history.entries) { entry in
                         Button {
-                            history.requestLoad(entry.result)
+                            history.requestLoad(entry)
                             onUse?()
                         } label: {
                             VStack(alignment: .leading, spacing: 2) {
@@ -51,9 +53,18 @@ struct HistoryView: View {
             if !history.entries.isEmpty {
                 ToolbarItem(placement: .destructiveAction) {
                     Button("Clear All", role: .destructive) {
-                        history.clear()
+                        confirmClear = true
                     }
                 }
+            }
+        }
+        .confirmationDialog(
+            "Clear all history?",
+            isPresented: $confirmClear,
+            titleVisibility: .visible
+        ) {
+            Button("Clear All", role: .destructive) {
+                history.clear()
             }
         }
     }

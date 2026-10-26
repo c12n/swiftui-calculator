@@ -9,7 +9,9 @@ Generated with the help of Claude (via claude.ai), then packaged as a standard X
 ![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-## What's new in 1.1.0
+## What's new in 1.1
+
+_All of the features below shipped together; the current release is **1.1.1**.
 
 - **Math history** — every `=` result is saved (persisted, latest first, up to 100). Tap a history entry to reuse its result, swipe to delete, or Clear All
 - **Haptics** — light taps for digits, medium for operations, heavy for `=`, and an error buzz for `bruh` / errors (toggleable in Settings)

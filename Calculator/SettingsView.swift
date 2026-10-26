@@ -133,7 +133,7 @@ struct SettingsView: View {
             }
 
             Section("About") {
-                LabeledContent("Version", value: "1.1.0")
+                LabeledContent("Version", value: "1.1.1")
                 LabeledContent("License", value: "MIT")
                 LabeledContent("Copyright", value: "© 2026 c12n Apps")
             }
